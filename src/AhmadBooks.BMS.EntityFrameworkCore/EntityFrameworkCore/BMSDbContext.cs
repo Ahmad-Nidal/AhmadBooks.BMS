@@ -1,27 +1,28 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AhmadBooks.BMS.Books;
+using AhmadBooks.BMS.Groups;
+using AhmadBooks.BMS.Users;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
 using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
-using Volo.Abp.TenantManagement;
-using Volo.Abp.TenantManagement.EntityFrameworkCore;
 
 namespace AhmadBooks.BMS.EntityFrameworkCore;
 
 [ReplaceDbContext(typeof(IIdentityDbContext))]
-[ReplaceDbContext(typeof(ITenantManagementDbContext))]
 [ConnectionStringName("Default")]
 public class BMSDbContext :
     AbpDbContext<BMSDbContext>,
-    IIdentityDbContext,
-    ITenantManagementDbContext
+    IIdentityDbContext
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
 
@@ -47,11 +48,11 @@ public class BMSDbContext :
     public DbSet<IdentityLinkUser> LinkUsers { get; set; }
     public DbSet<IdentityUserDelegation> UserDelegations { get; set; }
 
-    // Tenant Management
-    public DbSet<Tenant> Tenants { get; set; }
-    public DbSet<TenantConnectionString> TenantConnectionStrings { get; set; }
-
     #endregion
+
+    public DbSet<Owner> Owners { get; set; }
+    public DbSet<Book> Books { get; set; }
+    public DbSet<Group> Groups { get; set; }
 
     public BMSDbContext(DbContextOptions<BMSDbContext> options)
         : base(options)
@@ -72,15 +73,36 @@ public class BMSDbContext :
         builder.ConfigureIdentity();
         builder.ConfigureOpenIddict();
         builder.ConfigureFeatureManagement();
-        builder.ConfigureTenantManagement();
 
         /* Configure your own tables/entities inside here */
 
-        //builder.Entity<YourEntity>(b =>
-        //{
-        //    b.ToTable(BMSConsts.DbTablePrefix + "YourEntities", BMSConsts.DbSchema);
-        //    b.ConfigureByConvention(); //auto configure for the base class props
-        //    //...
-        //});
+        builder.Entity<Owner>(b =>
+        {
+            b.ToTable(BMSConsts.DbTablePrefix + "Owners", BMSConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.HasOne<IdentityUser>()
+             .WithOne()
+             .HasForeignKey<Owner>(u => u.Id)
+             .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<Group>()
+            .HasMany(g => g.Members)
+            .WithMany(o => o.Groups)
+            .UsingEntity<Dictionary<string, object>>(
+                "GroupMember",
+                j => j
+                    .HasOne<Owner>()
+                    .WithMany()
+                    .HasForeignKey("OwnerId"),
+                j => j
+                    .HasOne<Group>()
+                    .WithMany()
+                    .HasForeignKey("GroupId"),
+                j =>
+                {
+                    j.HasKey("GroupId", "OwnerId");
+                    j.ToTable(BMSConsts.DbTablePrefix + "GroupMembers", BMSConsts.DbSchema);
+                });
     }
 }

@@ -4,6 +4,7 @@ using AhmadBooks.BMS.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace AhmadBooks.BMS.Migrations
 {
     [DbContext(typeof(BMSDbContext))]
-    partial class BMSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230830182903_Basic_User_Group_Book")]
+    partial class BasicUserGroupBook
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,7 +73,7 @@ namespace AhmadBooks.BMS.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("AhmadBooks.BMS.Groups.Group", b =>
@@ -124,7 +127,7 @@ namespace AhmadBooks.BMS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Groups", (string)null);
+                    b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("BookGroup", b =>
@@ -139,7 +142,7 @@ namespace AhmadBooks.BMS.Migrations
 
                     b.HasIndex("GroupsId");
 
-                    b.ToTable("BookGroup", (string)null);
+                    b.ToTable("BookGroup");
                 });
 
             modelBuilder.Entity("GroupMember", b =>
