@@ -39,27 +39,11 @@ namespace AhmadBooks.BMS.Migrations
                         .HasColumnType("nvarchar(40)")
                         .HasColumnName("ConcurrencyStamp");
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreationTime");
-
-                    b.Property<Guid?>("CreatorId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("CreatorId");
-
                     b.Property<string>("ExtraProperties")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("ExtraProperties");
 
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("LastModificationTime");
-
-                    b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("LastModifierId");
-
-                    b.Property<Guid?>("OwnerId")
+                    b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Title")
@@ -70,7 +54,7 @@ namespace AhmadBooks.BMS.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("AppBooks", (string)null);
                 });
 
             modelBuilder.Entity("AhmadBooks.BMS.Groups.Group", b =>
@@ -84,39 +68,9 @@ namespace AhmadBooks.BMS.Migrations
                         .HasColumnType("nvarchar(40)")
                         .HasColumnName("ConcurrencyStamp");
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreationTime");
-
-                    b.Property<Guid?>("CreatorId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("CreatorId");
-
-                    b.Property<Guid?>("DeleterId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("DeleterId");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("DeletionTime");
-
                     b.Property<string>("ExtraProperties")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("ExtraProperties");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasColumnName("IsDeleted");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("LastModificationTime");
-
-                    b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("LastModifierId");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -124,22 +78,22 @@ namespace AhmadBooks.BMS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Groups", (string)null);
+                    b.ToTable("AppGroups", (string)null);
                 });
 
             modelBuilder.Entity("BookGroup", b =>
                 {
-                    b.Property<Guid>("BooksId")
+                    b.Property<Guid>("BookId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("GroupsId")
+                    b.Property<Guid>("GroupId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("BooksId", "GroupsId");
+                    b.HasKey("BookId", "GroupId");
 
-                    b.HasIndex("GroupsId");
+                    b.HasIndex("GroupId");
 
-                    b.ToTable("BookGroup", (string)null);
+                    b.ToTable("AppBookGroups", (string)null);
                 });
 
             modelBuilder.Entity("GroupMember", b =>
@@ -147,12 +101,12 @@ namespace AhmadBooks.BMS.Migrations
                     b.Property<Guid>("GroupId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("OwnerId")
+                    b.Property<Guid>("MemberId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("GroupId", "OwnerId");
+                    b.HasKey("GroupId", "MemberId");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("MemberId");
 
                     b.ToTable("AppGroupMembers", (string)null);
                 });
@@ -986,8 +940,6 @@ namespace AhmadBooks.BMS.Migrations
                     b.HasIndex("UserName");
 
                     b.ToTable("AbpUsers", (string)null);
-
-                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("Volo.Abp.Identity.IdentityUserClaim", b =>
@@ -1736,31 +1688,26 @@ namespace AhmadBooks.BMS.Migrations
                     b.ToTable("AbpSettings", (string)null);
                 });
 
-            modelBuilder.Entity("AhmadBooks.BMS.Users.Owner", b =>
-                {
-                    b.HasBaseType("Volo.Abp.Identity.IdentityUser");
-
-                    b.ToTable("AppOwners", (string)null);
-                });
-
             modelBuilder.Entity("AhmadBooks.BMS.Books.Book", b =>
                 {
-                    b.HasOne("AhmadBooks.BMS.Users.Owner", null)
-                        .WithMany("Books")
-                        .HasForeignKey("OwnerId");
+                    b.HasOne("Volo.Abp.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BookGroup", b =>
                 {
                     b.HasOne("AhmadBooks.BMS.Books.Book", null)
                         .WithMany()
-                        .HasForeignKey("BooksId")
+                        .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("AhmadBooks.BMS.Groups.Group", null)
                         .WithMany()
-                        .HasForeignKey("GroupsId")
+                        .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1773,9 +1720,9 @@ namespace AhmadBooks.BMS.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AhmadBooks.BMS.Users.Owner", null)
+                    b.HasOne("Volo.Abp.Identity.IdentityUser", null)
                         .WithMany()
-                        .HasForeignKey("OwnerId")
+                        .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1913,15 +1860,6 @@ namespace AhmadBooks.BMS.Migrations
                         .HasForeignKey("AuthorizationId");
                 });
 
-            modelBuilder.Entity("AhmadBooks.BMS.Users.Owner", b =>
-                {
-                    b.HasOne("Volo.Abp.Identity.IdentityUser", null)
-                        .WithOne()
-                        .HasForeignKey("AhmadBooks.BMS.Users.Owner", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>
                 {
                     b.Navigation("Actions");
@@ -1955,11 +1893,6 @@ namespace AhmadBooks.BMS.Migrations
             modelBuilder.Entity("Volo.Abp.Identity.OrganizationUnit", b =>
                 {
                     b.Navigation("Roles");
-                });
-
-            modelBuilder.Entity("AhmadBooks.BMS.Users.Owner", b =>
-                {
-                    b.Navigation("Books");
                 });
 #pragma warning restore 612, 618
         }

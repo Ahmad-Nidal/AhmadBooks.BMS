@@ -26,6 +26,7 @@ public class EntityFrameworkCoreBMSDbSchemaMigrator
          * current scope.
          */
 
+        
         await _serviceProvider
             .GetRequiredService<BMSDbContext>()
             .Database

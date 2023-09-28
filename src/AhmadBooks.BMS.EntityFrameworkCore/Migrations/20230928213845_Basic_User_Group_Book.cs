@@ -18,66 +18,63 @@ namespace AhmadBooks.BMS.Migrations
                 name: "AbpTenants");
 
             migrationBuilder.CreateTable(
-                name: "AppOwners",
+                name: "AppBooks",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Author = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AppOwners", x => x.Id);
+                    table.PrimaryKey("PK_AppBooks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AppOwners_AbpUsers_Id",
-                        column: x => x.Id,
+                        name: "FK_AppBooks_AbpUsers_OwnerId",
+                        column: x => x.OwnerId,
                         principalTable: "AbpUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Groups",
+                name: "AppGroups",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: true),
-                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    DeleterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Groups", x => x.Id);
+                    table.PrimaryKey("PK_AppGroups", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Books",
+                name: "AppBookGroups",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Author = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: true),
-                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    BookId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    GroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Books", x => x.Id);
+                    table.PrimaryKey("PK_AppBookGroups", x => new { x.BookId, x.GroupId });
                     table.ForeignKey(
-                        name: "FK_Books_AppOwners_OwnerId",
-                        column: x => x.OwnerId,
-                        principalTable: "AppOwners",
-                        principalColumn: "Id");
+                        name: "FK_AppBookGroups_AppBooks_BookId",
+                        column: x => x.BookId,
+                        principalTable: "AppBooks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppBookGroups_AppGroups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "AppGroups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -85,82 +82,55 @@ namespace AhmadBooks.BMS.Migrations
                 columns: table => new
                 {
                     GroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    MemberId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AppGroupMembers", x => new { x.GroupId, x.OwnerId });
+                    table.PrimaryKey("PK_AppGroupMembers", x => new { x.GroupId, x.MemberId });
                     table.ForeignKey(
-                        name: "FK_AppGroupMembers_AppOwners_OwnerId",
-                        column: x => x.OwnerId,
-                        principalTable: "AppOwners",
+                        name: "FK_AppGroupMembers_AbpUsers_MemberId",
+                        column: x => x.MemberId,
+                        principalTable: "AbpUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AppGroupMembers_Groups_GroupId",
+                        name: "FK_AppGroupMembers_AppGroups_GroupId",
                         column: x => x.GroupId,
-                        principalTable: "Groups",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BookGroup",
-                columns: table => new
-                {
-                    BooksId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    GroupsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BookGroup", x => new { x.BooksId, x.GroupsId });
-                    table.ForeignKey(
-                        name: "FK_BookGroup_Books_BooksId",
-                        column: x => x.BooksId,
-                        principalTable: "Books",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_BookGroup_Groups_GroupsId",
-                        column: x => x.GroupsId,
-                        principalTable: "Groups",
+                        principalTable: "AppGroups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppGroupMembers_OwnerId",
+                name: "IX_AppBookGroups_GroupId",
+                table: "AppBookGroups",
+                column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppBooks_OwnerId",
+                table: "AppBooks",
+                column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppGroupMembers_MemberId",
                 table: "AppGroupMembers",
-                column: "OwnerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BookGroup_GroupsId",
-                table: "BookGroup",
-                column: "GroupsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Books_OwnerId",
-                table: "Books",
-                column: "OwnerId");
+                column: "MemberId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AppBookGroups");
+
+            migrationBuilder.DropTable(
                 name: "AppGroupMembers");
 
             migrationBuilder.DropTable(
-                name: "BookGroup");
+                name: "AppBooks");
 
             migrationBuilder.DropTable(
-                name: "Books");
-
-            migrationBuilder.DropTable(
-                name: "Groups");
-
-            migrationBuilder.DropTable(
-                name: "AppOwners");
+                name: "AppGroups");
 
             migrationBuilder.CreateTable(
                 name: "AbpTenants",

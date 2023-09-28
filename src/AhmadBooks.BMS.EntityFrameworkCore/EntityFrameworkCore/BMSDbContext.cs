@@ -1,6 +1,5 @@
 ﻿using AhmadBooks.BMS.Books;
 using AhmadBooks.BMS.Groups;
-using AhmadBooks.BMS.Users;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
@@ -50,7 +49,6 @@ public class BMSDbContext :
 
     #endregion
 
-    public DbSet<Owner> Owners { get; set; }
     public DbSet<Book> Books { get; set; }
     public DbSet<Group> Groups { get; set; }
 
@@ -76,33 +74,56 @@ public class BMSDbContext :
 
         /* Configure your own tables/entities inside here */
 
-        builder.Entity<Owner>(b =>
+        builder.Entity<Group>(b =>
         {
-            b.ToTable(BMSConsts.DbTablePrefix + "Owners", BMSConsts.DbSchema);
-            b.ConfigureByConvention(); //auto configure for the base class props
-            b.HasOne<IdentityUser>()
-             .WithOne()
-             .HasForeignKey<Owner>(u => u.Id)
-             .OnDelete(DeleteBehavior.Cascade);
-        });
+            b.ToTable(BMSConsts.DbTablePrefix + "Groups", BMSConsts.DbSchema);
+            b.ConfigureByConvention();
 
-        builder.Entity<Group>()
-            .HasMany(g => g.Members)
-            .WithMany(o => o.Groups)
+            b.HasMany(g => g.Members)
+            .WithMany()
             .UsingEntity<Dictionary<string, object>>(
                 "GroupMember",
                 j => j
-                    .HasOne<Owner>()
+                    .HasOne<IdentityUser>()
                     .WithMany()
-                    .HasForeignKey("OwnerId"),
+                    .HasForeignKey("MemberId"),
                 j => j
                     .HasOne<Group>()
                     .WithMany()
                     .HasForeignKey("GroupId"),
                 j =>
                 {
-                    j.HasKey("GroupId", "OwnerId");
+                    j.HasKey("GroupId", "MemberId");
                     j.ToTable(BMSConsts.DbTablePrefix + "GroupMembers", BMSConsts.DbSchema);
                 });
+        });
+
+        builder.Entity<Book>(b =>
+        {
+            b.ToTable(BMSConsts.DbTablePrefix + "Books", BMSConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            b.HasOne<IdentityUser>()
+            .WithMany()
+            .HasForeignKey(b => b.OwnerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            b.HasMany(b => b.Groups)
+            .WithMany(g => g.Books)
+            .UsingEntity<Dictionary<string, object>>(
+                "BookGroup",
+                j => j.HasOne<Group>()
+                        .WithMany()
+                        .HasForeignKey("GroupId"),
+                j => j.HasOne<Book>()
+                        .WithMany()
+                        .HasForeignKey("BookId"),
+                j =>
+                {
+                    j.HasKey("BookId", "GroupId");
+                    j.ToTable(BMSConsts.DbTablePrefix + "BookGroups", BMSConsts.DbSchema);
+                });
+        });
+
     }
 }

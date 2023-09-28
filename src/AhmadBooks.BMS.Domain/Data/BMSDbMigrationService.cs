@@ -10,7 +10,6 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Identity;
-using Volo.Abp.MultiTenancy;
 using Volo.Abp.TenantManagement;
 
 namespace AhmadBooks.BMS.Data;
@@ -21,19 +20,13 @@ public class BMSDbMigrationService : ITransientDependency
 
     private readonly IDataSeeder _dataSeeder;
     private readonly IEnumerable<IBMSDbSchemaMigrator> _dbSchemaMigrators;
-    private readonly ITenantRepository _tenantRepository;
-    private readonly ICurrentTenant _currentTenant;
 
     public BMSDbMigrationService(
         IDataSeeder dataSeeder,
-        IEnumerable<IBMSDbSchemaMigrator> dbSchemaMigrators,
-        ITenantRepository tenantRepository,
-        ICurrentTenant currentTenant)
+        IEnumerable<IBMSDbSchemaMigrator> dbSchemaMigrators)
     {
         _dataSeeder = dataSeeder;
         _dbSchemaMigrators = dbSchemaMigrators;
-        _tenantRepository = tenantRepository;
-        _currentTenant = currentTenant;
 
         Logger = NullLogger<BMSDbMigrationService>.Instance;
     }
@@ -54,32 +47,32 @@ public class BMSDbMigrationService : ITransientDependency
 
         Logger.LogInformation($"Successfully completed host database migrations.");
 
-        var tenants = await _tenantRepository.GetListAsync(includeDetails: true);
+        //var tenants = await _tenantRepository.GetListAsync(includeDetails: true);
 
-        var migratedDatabaseSchemas = new HashSet<string>();
-        foreach (var tenant in tenants)
-        {
-            using (_currentTenant.Change(tenant.Id))
-            {
-                if (tenant.ConnectionStrings.Any())
-                {
-                    var tenantConnectionStrings = tenant.ConnectionStrings
-                        .Select(x => x.Value)
-                        .ToList();
+        //var migratedDatabaseSchemas = new HashSet<string>();
+        //foreach (var tenant in tenants)
+        //{
+        //    using (_currentTenant.Change(tenant.Id))
+        //    {
+        //        if (tenant.ConnectionStrings.Any())
+        //        {
+        //            var tenantConnectionStrings = tenant.ConnectionStrings
+        //                .Select(x => x.Value)
+        //                .ToList();
 
-                    if (!migratedDatabaseSchemas.IsSupersetOf(tenantConnectionStrings))
-                    {
-                        await MigrateDatabaseSchemaAsync(tenant);
+        //            if (!migratedDatabaseSchemas.IsSupersetOf(tenantConnectionStrings))
+        //            {
+        //                await MigrateDatabaseSchemaAsync(tenant);
 
-                        migratedDatabaseSchemas.AddIfNotContains(tenantConnectionStrings);
-                    }
-                }
+        //                migratedDatabaseSchemas.AddIfNotContains(tenantConnectionStrings);
+        //            }
+        //        }
 
-                await SeedDataAsync(tenant);
-            }
+        //        await SeedDataAsync(tenant);
+        //    }
 
-            Logger.LogInformation($"Successfully completed {tenant.Name} tenant database migrations.");
-        }
+        //    Logger.LogInformation($"Successfully completed {tenant.Name} tenant database migrations.");
+        //}
 
         Logger.LogInformation("Successfully completed all database migrations.");
         Logger.LogInformation("You can safely end this process...");
