@@ -79,6 +79,12 @@ public class BMSDbContext :
             b.ToTable(BMSConsts.DbTablePrefix + "Groups", BMSConsts.DbSchema);
             b.ConfigureByConvention();
 
+            b.Property(g => g.Name)
+            .IsRequired()
+            .HasMaxLength(GroupConsts.MaxNameLength);
+
+            b.HasIndex(g => g.Name);
+
             b.HasMany(g => g.Members)
             .WithMany()
             .UsingEntity<Dictionary<string, object>>(
