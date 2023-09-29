@@ -1,0 +1,19 @@
+﻿@page
+@using AhmadBooks.BMS.Localization
+@using AhmadBooks.BMS.Web.Pages.Groups
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model AhmadBooks.BMS.Web.Pages.Groups.CreateModel
+@inject IStringLocalizer<BMSResource> L
+@{
+    Layout = null;
+}
+<form asp-page="/Groups/CreateModal">
+    <abp-modal>
+        <abp-modal-header title="@L["NewGroup"]"></abp-modal-header>
+        <abp-modal-body>
+            <abp-input asp-for="Group.Name" />
+        </abp-modal-body>
+        <abp-modal-footer buttons="@(AbpModalButtons.Cancel|AbpModalButtons.Save)"></abp-modal-footer>
+    </abp-modal>
+</form>

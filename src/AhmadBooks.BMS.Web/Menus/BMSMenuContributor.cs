@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using AhmadBooks.BMS.Localization;
 using AhmadBooks.BMS.MultiTenancy;
+using AhmadBooks.BMS.Permissions;
+using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.Identity.Web.Navigation;
 using Volo.Abp.SettingManagement.Web.Navigation;
 using Volo.Abp.TenantManagement.Web.Navigation;
@@ -33,6 +35,17 @@ public class BMSMenuContributor : IMenuContributor
                 order: 0
             )
         );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                name: BMSMenus.Group,
+                displayName: l["Menu:Groups"],
+                icon: "fa fa-users",
+                url: "~/Groups",
+                requiredPermissionName: BMSPermissions.Groups.Default
+                )
+            );
+
 
         if (MultiTenancyConsts.IsEnabled)
         {

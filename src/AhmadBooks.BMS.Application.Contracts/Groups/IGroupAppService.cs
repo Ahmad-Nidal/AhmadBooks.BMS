@@ -9,8 +9,8 @@ namespace AhmadBooks.BMS.Groups
     {        
         Task<GroupDto> GetAsync(Guid id);
         Task<PagedResultDto<GroupDto>> GetListAsync(GetGroupListDto input);
-        Task<GroupDto> CreateAsync(CreateUpdateGroupDto input);
-        Task<GroupDto> UpdateAsync(Guid id, CreateUpdateGroupDto input);
+        Task<GroupDto> CreateAsync(CreateGroupDto input);
+        Task<GroupDto> UpdateAsync(Guid id, UpdateGroupDto input);
         Task DeleteAsync(Guid id);
     }
 }

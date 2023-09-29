@@ -4,6 +4,15 @@
     "Home": "الصفحة الرئيسية",
     "Menu:Home": "الرئيسية",
     "LongWelcomeMessage": "مرحبا بكم في التطبيق. هذا مشروع بدء تشغيل يعتمد على إطار عمل ABP. لمزيد من المعلومات ، يرجى زيارة abp.io.",
-    "AhmadBooksBMS:00001": "هناك مجموعة بالاسم نفسه: {name}"
+    "AhmadBooksBMS:00001": "هناك مجموعة بالاسم نفسه: {name}",
+    "Permission:BMS": "إدارة نظام الكتب",
+    "Permission:Groups": "إدارة المجموعات",
+    "Permission:Groups.Create": "إنشاء مجموعة جديدة",
+    "Permission:Groups.Edit": "تعديل المجموعة",
+    "Permission:Groups.Delete": "حذف المجموعات",
+    "Menu:Groups": "المحموعات",
+    "Groups": "المجموعات",
+    "GroupDeletionConfirmationMessage": "هل أنت متأكد من حذف هذه المجموعة '{0}'?",
+    "NewGroup": "مجموعة جديدة"
   }
 }

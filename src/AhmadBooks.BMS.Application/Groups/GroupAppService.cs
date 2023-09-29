@@ -24,7 +24,7 @@ namespace AhmadBooks.BMS.Groups
         }
 
         [Authorize(BMSPermissions.Groups.Create)]
-        public async Task<GroupDto> CreateAsync(CreateUpdateGroupDto input)
+        public async Task<GroupDto> CreateAsync(CreateGroupDto input)
         {
             var group = await _groupManager.CreateAsync(
                 input.Name
@@ -68,7 +68,7 @@ namespace AhmadBooks.BMS.Groups
         }
 
         [Authorize(BMSPermissions.Groups.Edit)]
-        public async Task<GroupDto> UpdateAsync(Guid id, CreateUpdateGroupDto input)
+        public async Task<GroupDto> UpdateAsync(Guid id, UpdateGroupDto input)
         {
             var group = await _groupRepository.GetAsync(id) 
                 ?? throw new EntityNotFoundException(typeof(Group), id);

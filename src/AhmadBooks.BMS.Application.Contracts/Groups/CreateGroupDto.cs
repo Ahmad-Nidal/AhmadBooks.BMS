@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace AhmadBooks.BMS.Groups
 {
-    public class CreateUpdateGroupDto
+    public class CreateGroupDto
     {
         [Required]
         [StringLength(GroupConsts.MaxNameLength)]
