@@ -52,7 +52,12 @@
                 {
                     title: l('Name'),
                     data: "name"
-                }
+                },
+                // TODO: Get members count
+                //{
+                //    title: l('MembersCount'),
+                //    data: "membersCount"
+                //}
             ]
         })
     );
