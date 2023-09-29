@@ -13,7 +13,7 @@ using Volo.Abp.EntityFrameworkCore;
 namespace AhmadBooks.BMS.Migrations
 {
     [DbContext(typeof(BMSDbContext))]
-    [Migration("20230929110521_group_domain")]
+    [Migration("20230929115010_group_domain")]
     partial class groupdomain
     {
         /// <inheritdoc />

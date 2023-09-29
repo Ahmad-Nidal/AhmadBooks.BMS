@@ -27,5 +27,18 @@ namespace AhmadBooks.BMS.Groups
                 name
             );
         }
+
+        public async Task ChangeNameAsync(
+            [NotNull] Group group,
+            [NotNull] string name)
+        {
+            var existingGroup = await _groupRepository.FindByNameAsync(name);
+            if (existingGroup is not null && existingGroup.Id != group.Id)
+            {
+                throw new GroupAlreadyExistsException(name);
+            }
+
+            group.ChangeName(name);
+        }
     }
 }

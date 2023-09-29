@@ -112,6 +112,7 @@ public class BMSDbContext :
             b.HasOne<IdentityUser>()
             .WithMany()
             .HasForeignKey(b => b.OwnerId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
             b.HasMany(b => b.Groups)

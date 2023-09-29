@@ -11,11 +11,11 @@ namespace AhmadBooks.BMS.Groups
 	{
         Task<Group> FindByNameAsync(string name);
 
-        //Task<List<Group>> GetListAsync(
-        //    int skipCount,
-        //    int maxResultCount,
-        //    string sorting,
-        //    string? filter = null
-        //);
+        Task<List<Group>> GetListAsync(
+            int skipCount,
+            int maxResultCount,
+            string sorting,
+            string? filter = null
+        );
     }
 }

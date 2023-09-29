@@ -10,6 +10,7 @@ namespace AhmadBooks.BMS.Groups
 {
     public class Group : FullAuditedAggregateRoot<Guid>
     {
+        // TODO: OwnerId (the creator of the group)
         public string Name { get; private set; }
         public List<Book> Books { get; set; }
         public List<IdentityUser> Members { get; set; }
