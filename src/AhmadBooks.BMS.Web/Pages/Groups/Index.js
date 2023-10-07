@@ -1,7 +1,5 @@
 ﻿$(function () {
     var l = abp.localization.getResource('BMS');
-    var createModal = new abp.ModalManager(abp.appPath + 'Groups/CreateModal');
-    var editModal = new abp.ModalManager(abp.appPath + 'Groups/EditModal');
 
     var dataTable = $('#GroupsTable').DataTable(
         abp.libs.datatables.normalizeConfiguration({
@@ -18,32 +16,43 @@
                         items:
                             [
                                 {
-                                    text: l('Edit'),
+                                    text: l('Enroll'),
                                     visible:
-                                        abp.auth.isGranted('BMS.Groups.Edit'),
+                                        function (data) {
+                                            return (
+                                                abp.currentUser.isAuthenticated // &&
+                                                //!ahmadBooks.bMS.groups.publicGroup.isEnrolled(data.record.id) // not working!
+                                            )
+                                        },
                                     action: function (data) {
-                                        editModal.open({ id: data.record.id });
+                                        ahmadBooks.bMS.groups.publicGroup
+                                            .enrollToGroup({ id: data.record.id })
+                                            .then(function () {
+                                                abp.notify.info(
+                                                    l('SuccessfullyEnrolled')
+                                                );
+                                                dataTable.ajax.reload();
+                                            })
                                     }
                                 },
                                 {
-                                    text: l('Delete'),
+                                    text: l('Unenroll'),
                                     visible:
-                                        abp.auth.isGranted('BMS.Groups.Delete'),
-                                    confirmMessage: function (data) {
-                                        return l(
-                                            'GroupDeletionConfirmationMessage',
-                                            data.record.name
-                                        );
-                                    },
+                                        function (data) {
+                                            return (
+                                                abp.currentUser.isAuthenticated // &&
+                                                //ahmadBooks.bMS.groups.publicGroup.isEnrolled(data.record.id) // not working!
+                                            )
+                                        },
                                     action: function (data) {
-                                        ahmadBooks.bMS.groups.group
-                                            .delete(data.record.id)
+                                        ahmadBooks.bMS.groups.publicGroup
+                                            .unenrollToGroup({ id: data.record.id })
                                             .then(function () {
                                                 abp.notify.info(
-                                                    l('SuccessfullyDeleted')
+                                                    l('Successfullyunenrolled')
                                                 );
                                                 dataTable.ajax.reload();
-                                            });
+                                            })
                                     }
                                 }
                             ]
@@ -52,26 +61,8 @@
                 {
                     title: l('Name'),
                     data: "name"
-                },
-                // TODO: Get members count
-                //{
-                //    title: l('MembersCount'),
-                //    data: "membersCount"
-                //}
+                }
             ]
         })
     );
-
-    createModal.onResult(function () {
-        dataTable.ajax.reload();
-    });
-
-    editModal.onResult(function () {
-        dataTable.ajax.reload();
-    });
-
-    $('#NewGroupButton').click(function (e) {
-        e.preventDefault();
-        createModal.open();
-    });
 });

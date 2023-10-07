@@ -1,5 +1,5 @@
 ﻿@page
-@model AhmadBooks.BMS.Web.Pages.Groups.IndexModel
+@model AhmadBooks.BMS.Web.Pages.Groups.Admin.IndexModel
 @using AhmadBooks.BMS.Localization
 @using AhmadBooks.BMS.Permissions
 @using AhmadBooks.BMS.Web.Pages.Groups
@@ -10,7 +10,7 @@
 
 @section scripts
 {
-    <abp-script src="/Pages/Groups/Index.js"/>
+    <abp-script src="/Pages/Admin/Groups/Index.js"/>
 }
 
 <abp-card>
@@ -18,6 +18,16 @@
         <abp-row>
             <abp-column size-md="_6">
                 <abp-card-title>@L["Groups"]</abp-card-title>
+            </abp-column>
+            <abp-column size-md="_6" class="text-end">
+                @if (await AuthorizationService
+                    .IsGrantedAsync(BMSPermissions.Groups.Create))
+                {
+                    <abp-button id="NewGroupButton"
+                                text="@L["NewGroup"].Value"
+                                icon="plus"
+                                button-type="Primary"/>
+                }
             </abp-column>
         </abp-row>
     </abp-card-header>

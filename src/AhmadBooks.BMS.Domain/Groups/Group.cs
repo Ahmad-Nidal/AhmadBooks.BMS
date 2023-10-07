@@ -26,6 +26,7 @@ namespace AhmadBooks.BMS.Groups
         {
             Id = id;
             SetName(name);
+            Members = new List<IdentityUser>();
         }
 
         internal Group ChangeName([NotNull] string name)

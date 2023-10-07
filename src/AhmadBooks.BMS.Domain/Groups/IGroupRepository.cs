@@ -17,5 +17,7 @@ namespace AhmadBooks.BMS.Groups
             string sorting,
             string? filter = null
         );
+
+        Task<Group> GetInculdeMembersAsync(Guid id);
     }
 }

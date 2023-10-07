@@ -3,12 +3,12 @@
 @using AhmadBooks.BMS.Web.Pages.Groups
 @using Microsoft.Extensions.Localization
 @using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
-@model AhmadBooks.BMS.Web.Pages.Groups.CreateModel
+@model AhmadBooks.BMS.Web.Pages.Groups.Admin.CreateModel
 @inject IStringLocalizer<BMSResource> L
 @{
     Layout = null;
 }
-<form asp-page="/Groups/CreateModal">
+<form asp-page="/Admin/Groups/CreateModal">
     <abp-modal>
         <abp-modal-header title="@L["NewGroup"]"></abp-modal-header>
         <abp-modal-body>

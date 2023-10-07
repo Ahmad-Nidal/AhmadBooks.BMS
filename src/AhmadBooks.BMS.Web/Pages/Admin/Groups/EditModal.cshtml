@@ -3,12 +3,12 @@
 @using AhmadBooks.BMS.Web.Pages.Groups
 @using Microsoft.Extensions.Localization
 @using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
-@model AhmadBooks.BMS.Web.Pages.Groups.EditModel
+@model AhmadBooks.BMS.Web.Pages.Groups.Admin.EditModel
 @inject IStringLocalizer<BMSResource> L
 @{
     Layout = null;
 }
-<form asp-page="/Groups/EditModal">
+<form asp-page="/Admin/Groups/EditModal">
     <abp-modal>
         <abp-modal-header title="@L["Update"]"></abp-modal-header>
         <abp-modal-body>

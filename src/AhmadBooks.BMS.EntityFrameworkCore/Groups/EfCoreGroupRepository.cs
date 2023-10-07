@@ -44,5 +44,13 @@ namespace AhmadBooks.BMS.Groups
                 .OrderBy(sorting)
                 .ToListAsync();
         }
+
+        public async Task<Group> GetInculdeMembersAsync(Guid id)
+        {
+            var dbSet = await GetDbSetAsync();
+            return await dbSet
+                .Include(group => group.Members)
+                .FirstOrDefaultAsync(group => group.Id == id);
+        }
     }
 }

@@ -7,7 +7,7 @@ using Volo.Abp.Domain.Entities;
 using Volo.Abp;
 using Microsoft.Extensions.Logging;
 
-namespace AhmadBooks.BMS.Web.Pages.Groups
+namespace AhmadBooks.BMS.Web.Pages.Groups.Admin
 {
     public class EditModel : BMSPageModel
     {

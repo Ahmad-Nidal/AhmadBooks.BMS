@@ -6,7 +6,7 @@ using System;
 using System.Threading.Tasks;
 using Volo.Abp;
 
-namespace AhmadBooks.BMS.Web.Pages.Groups
+namespace AhmadBooks.BMS.Web.Pages.Groups.Admin
 {
     public class CreateModel : BMSPageModel
     {
