@@ -1,4 +1,4 @@
-﻿namespace AhmadBooks.BMS.Groups
+﻿namespace AhmadBooks.BMS.Books
 {
     public static class BookConsts
     {

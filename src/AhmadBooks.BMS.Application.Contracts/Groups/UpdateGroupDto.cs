@@ -9,7 +9,7 @@ namespace AhmadBooks.BMS.Groups
         public Guid Id { get; set; }
 
         [Required]
-        [StringLength(GroupConsts.MaxNameLength)]
+        [StringLength(BookConsts.MaxNameLength)]
         public string Name { get; set; }
     }
 }

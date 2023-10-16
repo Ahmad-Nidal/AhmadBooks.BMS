@@ -6,7 +6,7 @@ namespace AhmadBooks.BMS.Groups
     public class CreateGroupDto
     {
         [Required]
-        [StringLength(GroupConsts.MaxNameLength)]
+        [StringLength(BookConsts.MaxNameLength)]
         public string Name { get; set; }
     }
 }

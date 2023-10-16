@@ -32,11 +32,10 @@ namespace AhmadBooks.BMS.Groups
 
         public Group SetName([NotNull] string name)
         {
-
             Name = Check.NotNullOrWhiteSpace(
                 name,
                 nameof(name),
-                maxLength: GroupConsts.MaxNameLength
+                maxLength: BookConsts.MaxNameLength
             );
             return this;
         }

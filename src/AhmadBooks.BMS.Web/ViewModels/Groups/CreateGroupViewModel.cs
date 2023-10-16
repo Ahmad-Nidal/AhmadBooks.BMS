@@ -6,7 +6,7 @@ namespace AhmadBooks.BMS.Web.ViewModels.Groups
     public class CreateGroupViewModel
     {
         [Required]
-        [StringLength(GroupConsts.MaxNameLength)]
+        [StringLength(BookConsts.MaxNameLength)]
         public string Name { get; set; }
     }
 }
