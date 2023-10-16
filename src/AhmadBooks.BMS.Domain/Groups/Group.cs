@@ -11,16 +11,17 @@ namespace AhmadBooks.BMS.Groups
     public class Group : FullAuditedAggregateRoot<Guid>
     {
         // TODO: OwnerId (the creator of the group)
-        public string Name { get; private set; }
-        public List<Book> Books { get; set; }
-        public List<IdentityUser> Members { get; set; }
+        public string Name { get; protected set; }
+        public GroupStatus Status { get; protected set; }
+        public List<Book> Books { get; protected set; }
+        public List<IdentityUser> Members { get; protected set; }
 
 
         private Group()
         {
 
         }
-        internal Group(
+        public Group(
             Guid id,
             [NotNull] string name)
         {
@@ -29,19 +30,15 @@ namespace AhmadBooks.BMS.Groups
             Members = new List<IdentityUser>();
         }
 
-        internal Group ChangeName([NotNull] string name)
+        public Group SetName([NotNull] string name)
         {
-            SetName(name);
-            return this;
-        }
 
-        private void SetName([NotNull] string name)
-        {
             Name = Check.NotNullOrWhiteSpace(
                 name,
                 nameof(name),
                 maxLength: GroupConsts.MaxNameLength
             );
+            return this;
         }
     }
 }

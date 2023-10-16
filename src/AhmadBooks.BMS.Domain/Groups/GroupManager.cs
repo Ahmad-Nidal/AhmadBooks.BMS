@@ -38,7 +38,7 @@ namespace AhmadBooks.BMS.Groups
                 throw new GroupAlreadyExistsException(name);
             }
 
-            group.ChangeName(name);
+            group.SetName(name);
         }
     }
 }

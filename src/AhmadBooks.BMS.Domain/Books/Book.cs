@@ -7,9 +7,10 @@ namespace AhmadBooks.BMS.Books
 {
     public class Book : AggregateRoot<Guid>
     {
-        public string Title { get; set; }
-        public string Author { get; set; }
-        public Guid OwnerId { get; set; }
-        public List<Group> Groups { get; set; }
+        public string Title { get; protected set; }
+        public string Author { get; protected set; }
+        public BookStatus Status { get; protected set; }
+        public Guid OwnerId { get; protected set; }
+        public List<Group> AssignedGroups { get; protected set; }
     }
 }

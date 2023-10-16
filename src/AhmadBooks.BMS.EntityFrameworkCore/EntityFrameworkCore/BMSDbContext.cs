@@ -115,7 +115,7 @@ public class BMSDbContext :
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-            b.HasMany(b => b.Groups)
+            b.HasMany(b => b.AssignedGroups)
             .WithMany(g => g.Books)
             .UsingEntity<Dictionary<string, object>>(
                 "BookGroup",
@@ -128,7 +128,7 @@ public class BMSDbContext :
                 j =>
                 {
                     j.HasKey("BookId", "GroupId");
-                    j.ToTable(BMSConsts.DbTablePrefix + "BookGroups", BMSConsts.DbSchema);
+                    j.ToTable(BMSConsts.DbTablePrefix + "BooksAssignedGroups", BMSConsts.DbSchema);
                 });
         });
 
