@@ -35,7 +35,7 @@ namespace AhmadBooks.BMS.Groups
             Name = Check.NotNullOrWhiteSpace(
                 name,
                 nameof(name),
-                maxLength: BookConsts.MaxNameLength
+                maxLength: GroupConsts.MaxNameLength
             );
             return this;
         }

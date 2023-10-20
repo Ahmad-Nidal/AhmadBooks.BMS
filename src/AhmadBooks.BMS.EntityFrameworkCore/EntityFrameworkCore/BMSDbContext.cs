@@ -81,7 +81,7 @@ public class BMSDbContext :
 
             b.Property(g => g.Name)
             .IsRequired()
-            .HasMaxLength(BookConsts.MaxNameLength);
+            .HasMaxLength(GroupConsts.MaxNameLength);
 
             b.HasIndex(g => g.Name);
 
