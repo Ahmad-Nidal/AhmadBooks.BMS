@@ -1,7 +1,7 @@
 ﻿$(function () {
     var l = abp.localization.getResource('BMS');
-    var createModal = new abp.ModalManager(abp.appPath + 'Groups/CreateModal');
-    var editModal = new abp.ModalManager(abp.appPath + 'Groups/EditModal');
+    var createModal = new abp.ModalManager(abp.appPath + 'Admin/Groups/CreateModal');
+    var editModal = new abp.ModalManager(abp.appPath + 'Admin/Groups/EditModal');
 
     var dataTable = $('#GroupsTable').DataTable(
         abp.libs.datatables.normalizeConfiguration({

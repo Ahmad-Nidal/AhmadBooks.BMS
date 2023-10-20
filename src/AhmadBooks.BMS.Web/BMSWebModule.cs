@@ -37,6 +37,8 @@ using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.UI;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.VirtualFileSystem;
+using Volo.Abp.OpenIddict;
+using System.Security.Cryptography.X509Certificates;
 
 namespace AhmadBooks.BMS.Web;
 
@@ -78,6 +80,42 @@ public class BMSWebModule : AbpModule
                 options.UseAspNetCore();
             });
         });
+
+        var hostingEnvironment = context.Services.GetHostingEnvironment();
+        var configuration = context.Services.GetConfiguration();
+
+        // Development environment
+        if (hostingEnvironment.IsDevelopment())
+        {
+            PreConfigure<AbpOpenIddictAspNetCoreOptions>(options =>
+            {
+                // This is default value, you can remove this line.
+                options.AddDevelopmentEncryptionAndSigningCertificate = true;
+            });
+        }
+
+        // Production or Staging environment
+        if (!hostingEnvironment.IsDevelopment())
+        {
+            PreConfigure<AbpOpenIddictAspNetCoreOptions>(options =>
+            {
+                options.AddDevelopmentEncryptionAndSigningCertificate = false;
+            });
+
+            PreConfigure<OpenIddictServerBuilder>(builder =>
+            {
+                builder.AddSigningCertificate(GetSigningCertificate(hostingEnvironment, configuration));
+                builder.AddEncryptionCertificate(GetSigningCertificate(hostingEnvironment, configuration));
+
+                //...
+            });
+        }
+    }
+    private X509Certificate2 GetSigningCertificate(IWebHostEnvironment hostingEnv, IConfiguration configuration)
+    {
+        string certificatePassword = configuration["Certificate:Password"];
+
+        return new X509Certificate2(Path.Combine(hostingEnv.ContentRootPath, "certificate.pfx"), certificatePassword);
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
@@ -195,11 +233,6 @@ public class BMSWebModule : AbpModule
         app.UseRouting();
         app.UseAuthentication();
         app.UseAbpOpenIddictValidation();
-
-        if (MultiTenancyConsts.IsEnabled)
-        {
-            app.UseMultiTenancy();
-        }
 
         app.UseUnitOfWork();
         app.UseAuthorization();
